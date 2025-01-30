@@ -1,13 +1,28 @@
-import {View, Image, Text, TouchableOpacity,ScrollView } from "react-native";
+import {View, Image, Text, TouchableOpacity,ScrollView, Alert } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { login } from "@/lib/appwrite";
+
 import icons from "@/constants/icons";
 import images from "@/constants/images";
+import { useGlobalContext } from "@/lib/global-provider";
+import { Redirect } from "expo-router";
 
 const SignIn = () => {
+  const { refetch, loading, isLogged } = useGlobalContext();
 
-  const handleLogin=()=>{};
+  if (!loading && isLogged) return <Redirect href="/" />;
+
+
+  const handleLogin = async () => {
+    const result = await login();
+    if (result) {
+      refetch();
+    } else {
+      Alert.alert("Error", "ログインに失敗しました");
+    }
+  };
 
   return (
     <SafeAreaView className="bg-white h-full">
